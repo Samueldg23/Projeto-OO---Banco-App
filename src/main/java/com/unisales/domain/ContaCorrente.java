@@ -22,9 +22,15 @@ public class ContaCorrente extends ContaBancaria {
 
     @Override
     public boolean sacar(double valor) {
-        if (!isAtiva() || valor <= 0) return false;
+        if (!isAtiva() || valor <= 0) {
+        System.out.println("Conta inativa ou Valor menor que 0");
+        return false;
+    }
         double disponibilidade = getSaldo() + limiteChequeEspecial;
-        if (valor > disponibilidade) return false;
+        if (valor > disponibilidade) {
+            System.out.println(" Limite Insuficiente");
+            return false;
+        }
         setSaldo(getSaldo() - valor);
         return true;
     }

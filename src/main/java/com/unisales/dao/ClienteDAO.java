@@ -76,6 +76,8 @@ public class ClienteDAO {
                 c.setTelefone(rs.getString("telefone"));
                 return c;
             }
+//printstacktrace serve para exibir a pilha de metodos que foram chamados até este que deu erro, sendo assim se um metodo x chamou cliente cli = ClienteDAO.buscarporid(1) e der problema 
+// mostra o metodo que chamou este metodo e este metodo pois foram os envolvidos no erro
         } catch (SQLException e) { e.printStackTrace(); }
         return null;
     }
@@ -93,13 +95,19 @@ public class ClienteDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    public void deletar(Long id) {
+    public boolean deletar(Long id) {
+        String sql = "DELETE FROM cliente WHERE id=?";
         try (Connection conn = ConexaoFactory.getConexao();
-             PreparedStatement ps = conn.prepareStatement("DELETE FROM cliente WHERE id=?")) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+            int linhasAfetadas = ps.executeUpdate();
+            return linhasAfetadas > 0; // true se deletou, false se não encontrou o ID
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // erro no banco também retorna false
+        }
     }
+    
 
     public long contar() {
         try (Connection conn = ConexaoFactory.getConexao();

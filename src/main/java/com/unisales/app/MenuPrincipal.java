@@ -63,10 +63,10 @@ public class MenuPrincipal {
     // ===== CLIENTE =====
     private void cadastrarCliente() {
         System.out.println("\n=== CADASTRAR CLIENTE ===");
-        System.out.print("Nome: "); String nome = sc.nextLine();
-        System.out.print("CPF: "); String cpf = sc.nextLine();
-        System.out.print("Email: "); String email = sc.nextLine();
-        System.out.print("Telefone: "); String tel = sc.nextLine();
+        System.out.print("Nome: "); String nome = lerString();
+        System.out.print("CPF: "); String cpf = lerString();
+        System.out.print("Email: "); String email = lerString();
+        System.out.print("Telefone: "); String tel = lerString();
         clienteService.adicionarCliente(new Cliente(nome, cpf, email, tel));
         System.out.println("Cliente cadastrado.");
     }
@@ -85,10 +85,11 @@ public class MenuPrincipal {
         System.out.print("ID do cliente: "); long id = lerLong();
         Cliente c = clienteService.buscarPorId(id);
         if (c == null) { System.out.println("Não encontrado."); return; }
-        System.out.print("Novo nome ("+c.getNome()+"): "); String nome = sc.nextLine();
-        System.out.print("Novo CPF ("+c.getCpf()+"): "); String cpf = sc.nextLine();
-        System.out.print("Novo email ("+c.getEmail()+"): "); String email = sc.nextLine();
-        System.out.print("Novo telefone ("+c.getTelefone()+"): "); String tel = sc.nextLine();
+
+        System.out.print("Novo nome ("+c.getNome()+"): "); String nome = lerString();
+        System.out.print("Novo CPF ("+c.getCpf()+"): "); String cpf = lerString();
+        System.out.print("Novo email ("+c.getEmail()+"): "); String email = lerString();
+        System.out.print("Novo telefone ("+c.getTelefone()+"): "); String tel = lerString();
         if (!nome.isBlank()) c.setNome(nome);
         if (!cpf.isBlank()) c.setCpf(cpf);
         if (!email.isBlank()) c.setEmail(email);
@@ -100,8 +101,10 @@ public class MenuPrincipal {
     private void removerCliente() {
         listarClientes();
         System.out.print("ID do cliente: "); long id = lerLong();
-        clienteService.removerCliente(id);
+        if(clienteService.removerCliente(id))
         System.out.println("Cliente removido.");
+        else
+        System.out.println("cliente não encontrado");
     }
 
     // ===== CONTA =====
@@ -112,9 +115,10 @@ public class MenuPrincipal {
         Cliente cli = clienteService.buscarPorId(idCli);
         if (cli == null) { System.out.println("Cliente não encontrado."); return; }
 
-        System.out.print("Número da conta: "); String numero = sc.nextLine();
+        System.out.print("Número da conta: "); String numero = lerString();
         System.out.print("Tipo (1-Corrente, 2-Poupança): "); int tipo = lerInt();
 
+        // (tipo >2 || tipo <1 ? 
         ContaBancaria conta = (tipo == 1)
             ? new ContaCorrente(numero, cli, 0.0, 500.0, 19.90)
             : new ContaPoupanca(numero, cli, 0.0, 0.006, 1);
@@ -129,7 +133,7 @@ public class MenuPrincipal {
         if (contas.isEmpty()) System.out.println("Nenhuma conta.");
         for (ContaBancaria c : contas) {
             String cliente = (c.getCliente()!=null? c.getCliente().getNome() : "-");
-            System.out.println(c.getId()+" - "+c.getTipo()+" - "+c.getNumero()+" - Cliente: "+cliente+" - Saldo: R$ "+String.format("%.2f", c.getSaldo()));
+            System.out.println(c.getId()+" - "+c.getTipo()+" - "+c.getNumero()+" - Cliente: "+cliente+" - Saldo: R$ "+String.format("%.2f", c.getSaldo())+" - Ativo : "+(c.isAtiva()?"sim" : "não") );
         }
     }
 
@@ -138,7 +142,7 @@ public class MenuPrincipal {
         System.out.print("ID da conta: "); long id = lerLong();
         ContaBancaria c = contaService.buscarPorId(id);
         if (c == null) { System.out.println("Não encontrada."); return; }
-        System.out.print("Novo número ("+c.getNumero()+"): "); String numero = sc.nextLine();
+        System.out.print("Novo número ("+c.getNumero()+"): "); String numero = lerString();
         System.out.print("Ativa? (1=Sim / 0=Não) atual ("+(c.isAtiva()?"Sim":"Não")+") : "); int ativa = lerInt();
         if (!numero.isBlank()) c.setNumero(numero);
         c.setAtiva(ativa == 1);
@@ -184,10 +188,14 @@ public class MenuPrincipal {
         ContaBancaria origem = contaService.buscarPorId(o);
         ContaBancaria destino = contaService.buscarPorId(d);
         if (origem==null || destino==null) { System.out.println("Conta não encontrada."); return; }
-        origem.transferir(destino, v);
+        boolean sucesso = (origem.getId() == destino.getId()) ? origem.transferir(origem, v) : origem.transferir(destino, v);
+        if(sucesso){
         contaService.atualizarConta(origem);
         contaService.atualizarConta(destino);
-        System.out.println("Transferência concluída (se saldo suficiente).");
+        System.out.println("Transferência concluída");
+        }
+        else
+        System.out.println("Transação encerrada");
     }
 
     private void aplicarCicloMensal() {
@@ -215,4 +223,19 @@ public class MenuPrincipal {
         while (!sc.hasNextDouble()) { sc.nextLine(); System.out.print("Número: "); }
         double x = sc.nextDouble(); sc.nextLine(); return x;
     }
+    private String lerString() {
+        String texto;
+        do {
+            texto = sc.nextLine().trim(); // lê e remove espaços extras
+            System.out.print("Texto: ");
+        } while (texto.isEmpty()); // repete se estiver vazio
+        return texto;
+    }
+    // private int gettipo(){
+    //     System.out.print("Tipo (1-Corrente, 2-Poupança): "); 
+    //     int tipo = lerInt();
+    //     (tipo >2 || tipo <1) ? gettipo() : return tipo 
+
+    // }
+    
 }

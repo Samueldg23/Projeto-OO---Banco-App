@@ -29,7 +29,7 @@ public class ClienteService {
         clienteDAO.atualizar(cliente);
     }
 
-    public void removerCliente(Long id) {
-        clienteDAO.deletar(id);
+    public boolean removerCliente(Long id) {
+      return  clienteDAO.deletar(id);
     }
 }

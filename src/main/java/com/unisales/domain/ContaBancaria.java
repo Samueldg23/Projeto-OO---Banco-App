@@ -21,16 +21,21 @@ public abstract class ContaBancaria {
     }
 
     public boolean depositar(double valor) {
-        if (!ativa || valor <= 0)
+        if (!ativa || valor <= 0){
+            System.out.println("Conta inativa ou Valor Menor ou igual a 0");
             return false;
+        }
         saldo += valor;
         return true;
     }
 
     public boolean sacar(double valor) {
         if (!ativa || valor <= 0 || valor > saldo)
+        {
+            System.out.println("Conta Inativa Ou Valor < 0 ou Saldo Insuficiente");
             return false;
-        saldo -= valor;
+        }
+            saldo -= valor;
         return true;
     }
 
@@ -39,6 +44,7 @@ public abstract class ContaBancaria {
             destino.depositar(valor);
             return true;
         }
+        System.out.println("Não foi possível realizar a trânsferencia");
         return false;
     }
 
