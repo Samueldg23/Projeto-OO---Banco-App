@@ -26,6 +26,7 @@ public class ClienteDAO {
     public Long inserir(Cliente c) {
         String sql = "INSERT INTO cliente (nome, cpf, email, telefone) VALUES (?,?,?,?)";
         try (Connection conn = ConexaoFactory.getConexao();
+        // EVITAR SQL INJECTION E MELHORA  A MANUTEINIBILIDADE DO CODIGO
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, c.getNome());
             ps.setString(2, c.getCpf());
@@ -47,8 +48,10 @@ public class ClienteDAO {
         String sql = "SELECT * FROM cliente ORDER BY id";
         try (Connection conn = ConexaoFactory.getConexao();
              Statement st = conn.createStatement();
+             // "TABELA" RESULTADO
              ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
+                //ENQUANTO TIVER LINHA NO RESULTSET FAÇA
+                while (rs.next()) {
                 Cliente c = new Cliente();
                 c.setId(rs.getLong("id"));
                 c.setNome(rs.getString("nome"));
