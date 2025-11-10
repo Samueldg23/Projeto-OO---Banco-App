@@ -30,9 +30,9 @@ public abstract class ContaBancaria {
     }
 
     public boolean sacar(double valor) {
-        if (!ativa || valor <= 0 || valor > saldo)
+        if (!ativa || valor < 0 || valor > saldo)
         {
-            System.out.println("Conta Inativa Ou Valor < 0 ou Saldo Insuficiente");
+            System.out.println("Conta Inativa Ou Valor Menor que 0 ou Saldo Insuficiente");
             return false;
         }
             saldo -= valor;

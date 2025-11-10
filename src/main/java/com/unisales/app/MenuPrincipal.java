@@ -116,7 +116,8 @@ public class MenuPrincipal {
         if (cli == null) { System.out.println("Cliente não encontrado."); return; }
 
         System.out.print("Número da conta: "); String numero = lerString();
-        System.out.print("Tipo (1-Corrente, 2-Poupança): "); int tipo = lerInt();
+        System.out.print("Tipo (1-Corrente, 2-Poupança): "); int tipo = gettipo();
+
 
         // (tipo >2 || tipo <1 ? 
         ContaBancaria conta = (tipo == 1)
@@ -144,10 +145,15 @@ public class MenuPrincipal {
         if (c == null) { System.out.println("Não encontrada."); return; }
         System.out.print("Novo número ("+c.getNumero()+"): "); String numero = lerString();
         System.out.print("Ativa? (1=Sim / 0=Não) atual ("+(c.isAtiva()?"Sim":"Não")+") : "); int ativa = lerInt();
+        while (ativa != 0 && ativa != 1) {
+            System.out.print("Valor inválido. Digite 1 para Sim ou 0 para Não: ");
+            ativa = lerInt();
+        }
         if (!numero.isBlank()) c.setNumero(numero);
         c.setAtiva(ativa == 1);
         contaService.atualizarConta(c);
         System.out.println("Conta atualizada.");
+        listarContas();
     }
 
     private void removerConta() {
@@ -166,7 +172,8 @@ public class MenuPrincipal {
         if (c == null) { System.out.println("Não encontrada."); return; }
         c.depositar(v);
         contaService.atualizarConta(c);
-        System.out.println("Depósito realizado.");
+        System.out.println("Depósito realizado com sucesso");
+        System.out.println("Depósito finalizado.");
     }
 
     private void sacar() {
@@ -177,7 +184,7 @@ public class MenuPrincipal {
         if (c == null) { System.out.println("Não encontrada."); return; }
         c.sacar(v);
         contaService.atualizarConta(c);
-        System.out.println("Saque tentado (verifique saldo).");
+        System.out.println("Saque Realizado Com Sucesso");
     }
 
     private void transferir() {
@@ -192,7 +199,7 @@ public class MenuPrincipal {
         if(sucesso){
         contaService.atualizarConta(origem);
         contaService.atualizarConta(destino);
-        System.out.println("Transferência concluída");
+        System.out.println("Transferência concluída com sucesso");
         }
         else
         System.out.println("Transação encerrada");
@@ -203,6 +210,7 @@ public class MenuPrincipal {
         operacaoService.aplicarCicloMensal(contas);
         for (ContaBancaria c : contas) contaService.atualizarConta(c);
         System.out.println("Ciclo mensal aplicado.");
+        gerarRelatorio();
     }
 
     private void gerarRelatorio() {
@@ -212,17 +220,42 @@ public class MenuPrincipal {
 
     // ===== utils leitura =====
     private int lerInt() {
-        while (!sc.hasNextInt()) { sc.nextLine(); System.out.print("Número: "); }
-        int x = sc.nextInt(); sc.nextLine(); return x;
+        while (true) {
+            System.out.print("Número: ");
+            String entrada = sc.nextLine().trim();
+    
+            try {
+                return Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido! Digite um número inteiro.");
+            }
+        }
     }
     private long lerLong() {
-        while (!sc.hasNextLong()) { sc.nextLine(); System.out.print("Número: "); }
-        long x = sc.nextLong(); sc.nextLine(); return x;
+        while (true) {
+            System.out.print("Número: ");
+            String entrada = sc.nextLine().trim();
+    
+            try {
+                return Long.parseLong(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido! Digite um número inteiro podendo ser Longo.");
+            }
+        }
     }
+    
     private double lerDouble() {
-        while (!sc.hasNextDouble()) { sc.nextLine(); System.out.print("Número: "); }
-        double x = sc.nextDouble(); sc.nextLine(); return x;
-    }
+        while (true) {
+            System.out.print("Número: ");
+            String entrada = sc.nextLine().trim();
+    
+            try {
+                return Double.parseDouble(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido! Digite um número decimal.");
+            }
+        }
+    }    
     private String lerString() {
         String texto;
         do {
@@ -231,11 +264,14 @@ public class MenuPrincipal {
         } while (texto.isEmpty()); // repete se estiver vazio
         return texto;
     }
-    // private int gettipo(){
-    //     System.out.print("Tipo (1-Corrente, 2-Poupança): "); 
-    //     int tipo = lerInt();
-    //     (tipo >2 || tipo <1) ? gettipo() : return tipo 
-
-    // }
+    private int gettipo(){
+        System.out.print("Tipo (1-Corrente, 2-Poupança): "); 
+        int tipo = lerInt();
+        while (tipo != 1 && tipo != 2) {
+            System.out.print("Tipo inválido. Digite 1 para Corrente ou 2 para Poupança: ");
+            tipo = lerInt();
+        }
+        return tipo;
+    }
     
 }

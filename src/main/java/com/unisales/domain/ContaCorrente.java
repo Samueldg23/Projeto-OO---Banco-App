@@ -22,7 +22,7 @@ public class ContaCorrente extends ContaBancaria {
 
     @Override
     public boolean sacar(double valor) {
-        if (!isAtiva() || valor <= 0) {
+        if (!isAtiva() || valor < 0) {
         System.out.println("Conta inativa ou Valor menor que 0");
         return false;
     }
@@ -32,6 +32,15 @@ public class ContaCorrente extends ContaBancaria {
             return false;
         }
         setSaldo(getSaldo() - valor);
+        return true;
+    }
+
+    public boolean taxarConta(double tarifa){
+        if (!isAtiva() || tarifa < 0) {
+        System.err.println("Conta inativa ou tarifa menor que 0");
+        return false;
+    }
+        setSaldo(getSaldo() - tarifa);
         return true;
     }
 

@@ -26,11 +26,6 @@ public class ContaPoupanca extends ContaBancaria {
     }
 
     @Override
-    public boolean depositar(double valor) {
-        return super.depositar(valor);
-    }
-
-    @Override
     public void exibirInformacoes() {
         System.out.println("=== Conta Poupança ===");
         System.out.println("Número : " + getNumero());
