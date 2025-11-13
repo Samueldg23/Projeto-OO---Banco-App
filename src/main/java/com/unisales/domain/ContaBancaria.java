@@ -1,6 +1,8 @@
 package com.unisales.domain;
 
-public abstract class ContaBancaria {
+import com.unisales.interfaces.Transacional;
+
+public abstract class ContaBancaria implements Transacional{
     private Long id;
     private String numero;
     private double saldo;

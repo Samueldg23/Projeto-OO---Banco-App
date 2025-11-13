@@ -1,9 +1,12 @@
 package com.unisales.domain;
 
-public class ContaCorrente extends ContaBancaria {
+import java.math.BigDecimal;
+import com.unisales.interfaces.Tarifavel;
 
-    private double limiteChequeEspecial; // ex.: 500.00
-    private double tarifaMensal;         // ex.: 19.90
+public class ContaCorrente extends ContaBancaria implements Tarifavel {
+
+    private double limiteChequeEspecial;
+    private double tarifaMensal;
 
     public ContaCorrente() {
         super();
@@ -21,36 +24,21 @@ public class ContaCorrente extends ContaBancaria {
     }
 
     @Override
-    public boolean sacar(double valor) {
-        if (!isAtiva() || valor < 0) {
-        System.out.println("Conta inativa ou Valor menor que 0");
-        return false;
-    }
-        double disponibilidade = getSaldo() + limiteChequeEspecial;
-        if (valor > disponibilidade) {
-            System.out.println(" Limite Insuficiente");
-            return false;
-        }
-        setSaldo(getSaldo() - valor);
-        return true;
+    public BigDecimal calcularTarifa() {
+        return BigDecimal.valueOf(tarifaMensal);
     }
 
-    public boolean taxarConta(double tarifa){
-        if (!isAtiva() || tarifa < 0) {
-        System.err.println("Conta inativa ou tarifa menor que 0");
-        return false;
-    }
-        setSaldo(getSaldo() - tarifa);
-        return true;
+    public boolean taxarConta() {
+        return sacar(calcularTarifa().doubleValue());
     }
 
     @Override
-    public boolean depositar(double valor) {
-        return super.depositar(valor);
-    }
-
-    public void cobrarTarifa() {
-        sacar(tarifaMensal);
+    public boolean sacar(double valor) {
+        if (!isAtiva() || valor < 0) return false;
+        double disponibilidade = getSaldo() + limiteChequeEspecial;
+        if (valor > disponibilidade) return false;
+        setSaldo(getSaldo() - valor);
+        return true;
     }
 
     @Override
@@ -65,12 +53,8 @@ public class ContaCorrente extends ContaBancaria {
     }
 
     public double getLimiteChequeEspecial() { return limiteChequeEspecial; }
-    public void setLimiteChequeEspecial(double limiteChequeEspecial) {
-        this.limiteChequeEspecial = Math.max(0.0, limiteChequeEspecial);
-    }
+    public void setLimiteChequeEspecial(double limiteChequeEspecial) { this.limiteChequeEspecial = Math.max(0.0, limiteChequeEspecial); }
 
     public double getTarifaMensal() { return tarifaMensal; }
-    public void setTarifaMensal(double tarifaMensal) {
-        this.tarifaMensal = Math.max(0.0, tarifaMensal);
-    }
+    public void setTarifaMensal(double tarifaMensal) { this.tarifaMensal = Math.max(0.0, tarifaMensal); }
 }

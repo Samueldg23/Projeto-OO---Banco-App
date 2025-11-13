@@ -1,10 +1,9 @@
 package com.unisales.interfaces;
 
-
 import com.unisales.domain.ContaBancaria;
 
 public interface Transacional {
-    void depositar(double valor);
-    void sacar(double valor);
-    void transferir(ContaBancaria destino, double valor);
+    boolean depositar(double valor);
+    boolean sacar(double valor);
+    boolean transferir(ContaBancaria destino, double valor);
 }

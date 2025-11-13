@@ -1,9 +1,12 @@
 package com.unisales.domain;
 
-public class ContaPoupanca extends ContaBancaria {
+import java.math.BigDecimal;
+import com.unisales.interfaces.Rendivel;
 
-    private double taxaRendimentoMensal; // ex.: 0.006 (=0,6% a.m.)
-    private int diaAniversario;          // 1..31
+public class ContaPoupanca extends ContaBancaria implements Rendivel {
+
+    private double taxaRendimentoMensal;
+    private int diaAniversario;
 
     public ContaPoupanca() {
         super();
@@ -20,9 +23,13 @@ public class ContaPoupanca extends ContaBancaria {
         this.diaAniversario = (diaAniversario < 1 || diaAniversario > 31) ? 1 : diaAniversario;
     }
 
+    @Override
+    public BigDecimal calcularRendimento() {
+        return BigDecimal.valueOf(getSaldo() * taxaRendimentoMensal);
+    }
+
     public void render() {
-        double rendimento = getSaldo() * taxaRendimentoMensal;
-        depositar(rendimento);
+        depositar(calcularRendimento().doubleValue());
     }
 
     @Override
@@ -37,12 +44,8 @@ public class ContaPoupanca extends ContaBancaria {
     }
 
     public double getTaxaRendimentoMensal() { return taxaRendimentoMensal; }
-    public void setTaxaRendimentoMensal(double taxaRendimentoMensal) {
-        this.taxaRendimentoMensal = Math.max(0.0, taxaRendimentoMensal);
-    }
+    public void setTaxaRendimentoMensal(double taxaRendimentoMensal) { this.taxaRendimentoMensal = Math.max(0.0, taxaRendimentoMensal); }
 
     public int getDiaAniversario() { return diaAniversario; }
-    public void setDiaAniversario(int diaAniversario) {
-        this.diaAniversario = (diaAniversario < 1 || diaAniversario > 31) ? 1 : diaAniversario;
-    }
+    public void setDiaAniversario(int diaAniversario) { this.diaAniversario = (diaAniversario < 1 || diaAniversario > 31) ? 1 : diaAniversario; }
 }
