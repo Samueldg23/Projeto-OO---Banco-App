@@ -78,13 +78,14 @@ public class ContaDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    public void deletar(Long id) {
+    public boolean deletar(Long id) {
         try (Connection conn = ConexaoFactory.getConexao();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM conta WHERE id=?")) {
             ps.setLong(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); return false;}
     }
+
 
     private ContaBancaria mapearConta(ResultSet rs) throws SQLException {
         String tipo = rs.getString("tipo");

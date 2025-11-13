@@ -29,7 +29,7 @@ public class ContaService {
         contaDAO.atualizar(conta);
     }
 
-    public void removerConta(Long id) {
-        contaDAO.deletar(id);
+    public boolean removerConta(Long id) {
+     return   contaDAO.deletar(id);
     }
 }

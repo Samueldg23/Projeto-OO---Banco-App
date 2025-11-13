@@ -104,7 +104,7 @@ public class MenuPrincipal {
         if(clienteService.removerCliente(id))
         System.out.println("Cliente removido.");
         else
-        System.out.println("cliente não encontrado");
+        System.out.println("Operação não concluida");
     }
 
     // ===== CONTA =====
@@ -159,9 +159,11 @@ public class MenuPrincipal {
     private void removerConta() {
         listarContas();
         System.out.print("ID da conta: "); long id = lerLong();
-        contaService.removerConta(id);
-        System.out.println("Conta removida.");
-    }
+        String mensagem = contaService.removerConta(id)
+        ? "Conta removida."
+        : "Conta não identificada";
+    System.out.println(mensagem);
+        }
 
     // ===== OPERAÇÕES =====
     private void depositar() {
@@ -182,7 +184,7 @@ public class MenuPrincipal {
         System.out.print("Valor: "); double v = lerDouble();
         ContaBancaria c = contaService.buscarPorId(id);
         if (c == null) { System.out.println("Não encontrada."); return; }
-        c.sacar(v);
+       if(!c.sacar(v)) {return;}
         contaService.atualizarConta(c);
         System.out.println("Saque Realizado Com Sucesso");
     }
