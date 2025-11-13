@@ -16,7 +16,7 @@ public class ContaCorrente extends ContaBancaria implements Tarifavel {
     }
 
     public ContaCorrente(String numero, Cliente cliente, double saldoInicial,
-                         double limiteChequeEspecial, double tarifaMensal) {
+            double limiteChequeEspecial, double tarifaMensal) {
         super(numero, TipoConta.CORRENTE, cliente);
         setSaldo(saldoInicial);
         this.limiteChequeEspecial = Math.max(0.0, limiteChequeEspecial);
@@ -34,9 +34,11 @@ public class ContaCorrente extends ContaBancaria implements Tarifavel {
 
     @Override
     public boolean sacar(double valor) {
-        if (!isAtiva() || valor < 0) return false;
+        if (!isAtiva() || valor < 0)
+            return false;
         double disponibilidade = getSaldo() + limiteChequeEspecial;
-        if (valor > disponibilidade) return false;
+        if (valor > disponibilidade)
+            return false;
         setSaldo(getSaldo() - valor);
         return true;
     }
@@ -52,9 +54,19 @@ public class ContaCorrente extends ContaBancaria implements Tarifavel {
         System.out.println("Tarifa Mensal         : R$ " + tarifaMensal);
     }
 
-    public double getLimiteChequeEspecial() { return limiteChequeEspecial; }
-    public void setLimiteChequeEspecial(double limiteChequeEspecial) { this.limiteChequeEspecial = Math.max(0.0, limiteChequeEspecial); }
+    public double getLimiteChequeEspecial() {
+        return limiteChequeEspecial;
+    }
 
-    public double getTarifaMensal() { return tarifaMensal; }
-    public void setTarifaMensal(double tarifaMensal) { this.tarifaMensal = Math.max(0.0, tarifaMensal); }
+    public void setLimiteChequeEspecial(double limiteChequeEspecial) {
+        this.limiteChequeEspecial = Math.max(0.0, limiteChequeEspecial);
+    }
+
+    public double getTarifaMensal() {
+        return tarifaMensal;
+    }
+
+    public void setTarifaMensal(double tarifaMensal) {
+        this.tarifaMensal = Math.max(0.0, tarifaMensal);
+    }
 }

@@ -16,7 +16,7 @@ public class ContaPoupanca extends ContaBancaria implements Rendivel {
     }
 
     public ContaPoupanca(String numero, Cliente cliente, double saldoInicial,
-                         double taxaRendimentoMensal, int diaAniversario) {
+            double taxaRendimentoMensal, int diaAniversario) {
         super(numero, TipoConta.POUPANCA, cliente);
         setSaldo(saldoInicial);
         this.taxaRendimentoMensal = Math.max(0.0, taxaRendimentoMensal);
@@ -43,9 +43,19 @@ public class ContaPoupanca extends ContaBancaria implements Rendivel {
         System.out.println("Dia de Aniversário    : " + diaAniversario);
     }
 
-    public double getTaxaRendimentoMensal() { return taxaRendimentoMensal; }
-    public void setTaxaRendimentoMensal(double taxaRendimentoMensal) { this.taxaRendimentoMensal = Math.max(0.0, taxaRendimentoMensal); }
+    public double getTaxaRendimentoMensal() {
+        return taxaRendimentoMensal;
+    }
 
-    public int getDiaAniversario() { return diaAniversario; }
-    public void setDiaAniversario(int diaAniversario) { this.diaAniversario = (diaAniversario < 1 || diaAniversario > 31) ? 1 : diaAniversario; }
+    public void setTaxaRendimentoMensal(double taxaRendimentoMensal) {
+        this.taxaRendimentoMensal = Math.max(0.0, taxaRendimentoMensal);
+    }
+
+    public int getDiaAniversario() {
+        return diaAniversario;
+    }
+
+    public void setDiaAniversario(int diaAniversario) {
+        this.diaAniversario = (diaAniversario < 1 || diaAniversario > 31) ? 1 : diaAniversario;
+    }
 }
